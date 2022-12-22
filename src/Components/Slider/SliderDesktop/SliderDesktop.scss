@@ -21,6 +21,11 @@
     }
   }
   .sliderDesktop__smallSlidesContainer {
+    .smallSlidesContainer__slidesContainer {
+      .slidesContainer__slide {
+        cursor: pointer;
+      }
+    }
     background: rgba(255, 255, 255, 0.5);
     .smallSlidesContainer__arrow {
       color: $color1;
