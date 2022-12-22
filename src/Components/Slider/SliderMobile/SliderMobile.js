@@ -8,23 +8,23 @@ const SliderMobile = (props) => {
   const containerSmallButtonLeft = useRef();
   const containerSmallButtonRight = useRef();
   const [startingPoint, setStartingPoint] = useState();
-  const [shift, setShift] = useState(0);
-  const [currentId, setCurrentId] = useState(undefined);
+  const [shift, setShift] = useState(0); // STORE VALUE OF DISTANCE FINGER SWIPE ON THE SCREEN  
+  const [currentId, setCurrentId] = useState(undefined); // ID OF ACTUAL DISPLAY SLIDE
 
   useEffect(() => {
     if (props.picked === "nonAutoMoveSlider") {
-      sliderMobile.current.classList.add("sliderMobile--nonAutoMove");
+      sliderMobile.current.classList.add("sliderMobile--nonAutoMove"); // IF IN FORM USER CHOOSE NON AUTO MOVE IT WILL HIDE TEXTS AND DISPLAY SMALL SLIDER BELOW MAIN
     }
     if (props.picked === "autoMoveSlider") {
-      sliderMobile.current.classList.add("sliderMobile--autoMove");
+      sliderMobile.current.classList.add("sliderMobile--autoMove");// IF IN FORM USER CHOOSE AUTO-MOVE IT WILL SHOW TEXTS AND HIDE SMALL SLIDER
     }
     slidesContainer.current.childNodes[0].classList.add("current");
     slidesContainer.current.childNodes[0].style.display = "block";
-    setCurrentId(0);
+    setCurrentId(0); // ON FIRST RENDER ELEMENT, SET DISPLAY SLIDE ON SLIDE WITH ID 0
     props.moveSlider(autoMoveSliderMobile);
   }, []);
 
-  const autoMoveSliderMobile = () => {
+  const autoMoveSliderMobile = () => { // FUNCTION RESPONSIBLE FOR CHANGEING SLIDES AUTOMATICALLY 
     slidesContainer.current.style.pointerEvents = "none";
     setInterval(() => {
       for (let i = 0; i < slidesContainer.current.childNodes.length; i++) {
@@ -66,7 +66,7 @@ const SliderMobile = (props) => {
     }, 20000);
   };
 
-  const touchStartHandler = (event) => {
+  const touchStartHandler = (event) => { // FUNCTION RESPONSIBLE FOR BEHAVIOUR OF SLIDER ELEMENTS WHEN USER PUT FINGER ON SCREEN
     setStartingPoint(event.touches[0].clientX);
     for (let i = 0; i < slidesContainer.current.childNodes.length; i++) {
       if (slidesContainer.current.childNodes[i].classList.contains("current")) {
@@ -88,11 +88,10 @@ const SliderMobile = (props) => {
     }
   };
 
-  const touchMoveHandler = (event) => {
+  const touchMoveHandler = (event) => { // FUNCTION RESPONSIBLE FOR BEHAVIOUR OF SLIDER ELEMENTS WHEN USER MOVE FINGER ON SCREEN
     slidesContainer.current.style.pointerEvents = "none";
     setShift(startingPoint - event.touches[0].clientX);
-    if (shift > 0) {
-      // move to next slide
+    if (shift > 0) { // MOVE TO NEXT SLIDE
       for (let i = 0; i < slidesContainer.current.childNodes.length; i++) {
         if (slidesContainer.current.childNodes[i].classList.contains("current")) {
           slidesContainer.current.childNodes[i].style.display = "block";
@@ -108,8 +107,7 @@ const SliderMobile = (props) => {
         }
       }
     }
-    if (shift < 0) {
-      // move to previous slide
+    if (shift < 0) { // MOVE TO PREVIOUS SLIDE
       for (let i = 0; i < slidesContainer.current.childNodes.length; i++) {
         if (slidesContainer.current.childNodes[i].classList.contains("current")) {
           if (slidesContainer.current.childNodes[i].classList.contains("current")) {
@@ -128,11 +126,9 @@ const SliderMobile = (props) => {
       }
     }
   };
-  const touchEndHandler = (event) => {
-    if (shift > 0) {
-      // end finger and be visible next slide
-      if (shift > slidesContainer.current.clientWidth / 4) {
-        // enough to jump to next slide
+  const touchEndHandler = () => { // FUNCTION RESPONSIBLE FOR BEHAVIOUR OF SLIDER ELEMENTS WHEN USER REMOVE FINGER FROM SCREEN
+    if (shift > 0) { // MOVE CURRENT SLIDE TO LEFT AND BE VISIBLE NEXT SLIDE
+      if (shift > slidesContainer.current.clientWidth / 4) { // ENOUGH TO MOVE TO NEXT SLIDE
         for (let i = 0; i < slidesContainer.current.childNodes.length; i++) {
           if (slidesContainer.current.childNodes[i].classList.contains("current")) {
             let currentPosition = parseFloat(slidesContainer.current.childNodes[i].style.left);
@@ -176,8 +172,7 @@ const SliderMobile = (props) => {
             }, 1);
           }
         }
-      } else {
-        // not enough to jump to next slide
+      } else { // NOT ENOUGH TO MOVE TO NEXT SLIDE
         for (let i = 0; i < slidesContainer.current.childNodes.length; i++) {
           if (slidesContainer.current.childNodes[i].classList.contains("current")) {
             let currentPosition = parseFloat(slidesContainer.current.childNodes[i].style.left);
@@ -215,10 +210,8 @@ const SliderMobile = (props) => {
         }
       }
     }
-    if (shift < 0) {
-      // end finger and be visible previous slide
-      if (shift < -Math.abs(slidesContainer.current.clientWidth / 4)) {
-        // enough to jump to previous slide
+    if (shift < 0) { // MOVE CURRENT SLIDE TO RIGHT AND BE VISIBLE PREVIOUS SLIDE
+      if (shift < -Math.abs(slidesContainer.current.clientWidth / 4)) { // ENOUGH TO MOVE TO PREVIOUS SLIDE
         for (let i = 0; i < slidesContainer.current.childNodes.length; i++) {
           if (slidesContainer.current.childNodes[i].classList.contains("current")) {
             let currentPosition = parseFloat(slidesContainer.current.childNodes[i].style.right);
@@ -262,8 +255,7 @@ const SliderMobile = (props) => {
             }, 1);
           }
         }
-      } else {
-        // not enough to jump to previous slide
+      } else {  // NOT ENOUGH TO MOVE TO PREVIOUS SLIDE
         for (let i = 0; i < slidesContainer.current.childNodes.length; i++) {
           if (slidesContainer.current.childNodes[i].classList.contains("current")) {
             let currentPosition = parseFloat(slidesContainer.current.childNodes[i].style.right);
@@ -301,8 +293,8 @@ const SliderMobile = (props) => {
       }
     }
   };
-  // update slide view after click on arrow
-  useEffect(() => {
+
+  useEffect(() => {  // UPDATE SLIDE VIEW AFTER CLICK ON ARROW
     if (slidesContainer.current.childNodes[currentId] !== undefined) {
       for (let i = 0; i < slidesContainer.current.childNodes.length; i++) {
         slidesContainer.current.childNodes[i].classList.remove("current");
@@ -335,7 +327,7 @@ const SliderMobile = (props) => {
     }
   };
 
-  const pickSlideHandler = (event) => {
+  const pickSlideHandler = (event) => { // FUNCTION RESPONSIBLE FOR DISPLAY PICKED SLIDE FROM SMALL SLIDER
     for (let i = 0; i < slidesContainer.current.childNodes.length; i++) {
       slidesContainer.current.childNodes[i].classList.remove("current");
       slidesContainer.current.childNodes[i].style.display = "none";
@@ -348,14 +340,14 @@ const SliderMobile = (props) => {
     setCurrentId(+event.target.id);
   };
 
-  let slidesMain = props.slidesArray.map((slide) => (
+  let slidesMain = props.slidesArray.map((slide) => ( // CREATE SLIDES ELEMENTS
     <div key={slide.id} className="slidesContainer__slide" style={{ backgroundImage: `url(${slide.url})` }}>
       <div className="slide__text slide__text--left">{slide.textLeft}</div>
       <div className="slide__text slide__text--right">{slide.textRight}</div>
     </div>
   ));
 
-  let slidesSmall;
+  let slidesSmall; // VARIABLE WHICH STORE SMALL SLIDES ELEMENTS
   if (props.slidesArray.length >= 3) {
     slidesSmall = (
       <Fragment>

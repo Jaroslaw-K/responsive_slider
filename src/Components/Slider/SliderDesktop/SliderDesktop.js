@@ -9,22 +9,22 @@ const SliderDesktop = (props) => {
   const containerButtonRight = useRef();
   const containerSmallButtonLeft = useRef();
   const containerSmallButtonRight = useRef();
-  const [currentId, setCurrentId] = useState(undefined);
+  const [currentId, setCurrentId] = useState(undefined); // ID OF ACTUAL DISPLAY SLIDE
 
   useEffect(() => {
-    if (props.picked === "nonAutoMoveSlider") {
-      sliderDesktop.current.classList.add("sliderDesktop--nonAutoMove");
+    if (props.picked === "nonAutoMoveSlider") { // IF IN FORM USER CHOOSE NON AUTO MOVE IT WILL HIDE TEXTS AND DISPLAY SMALL SLIDER BELOW MAIN
+      sliderDesktop.current.classList.add("sliderDesktop--nonAutoMove"); 
     }
     if (props.picked === "autoMoveSlider") {
-      sliderDesktop.current.classList.add("sliderDesktop--autoMove");
+      sliderDesktop.current.classList.add("sliderDesktop--autoMove"); // IF IN FORM USER CHOOSE AUTO-MOVE IT WILL SHOW TEXTS AND HIDE SMALL SLIDER
     }
     slidesContainer.current.childNodes[0].classList.add("current");
     slidesContainer.current.childNodes[0].style.display = "block";
-    setCurrentId(0);
+    setCurrentId(0); // ON FIRST RENDER ELEMENT, SET DISPLAY SLIDE ON SLIDE WITH ID 0
     props.moveSlider(autoMoveSliderDesktop);
   }, []);
 
-  const toggleLeftImgHandler = () => {
+  const toggleLeftImgHandler = () => { // FUNCTION RESPONSIBLE FOR MOVE TO PREVIOUS SLIDE
     if (slidesContainer.current.childNodes.length > 1) {
       containerButtonLeft.current.style.pointerEvents = "none";
       containerButtonRight.current.style.pointerEvents = "none";
@@ -73,7 +73,7 @@ const SliderDesktop = (props) => {
     }
   };
 
-  const toggleRightImgHandler = () => {
+  const toggleRightImgHandler = () => { // FUNCTION RESPONSIBLE FOR MOVE TO NEXT SLIDE
     if (slidesContainer.current.childNodes.length > 1) {
       containerButtonLeft.current.style.pointerEvents = "none";
       containerButtonRight.current.style.pointerEvents = "none";
@@ -122,7 +122,7 @@ const SliderDesktop = (props) => {
     }
   };
 
-  const pickSlideHandler = (event) => {
+  const pickSlideHandler = (event) => { // FUNCTION RESPONSIBLE FOR DISPLAY PICKED SLIDE FROM SMALL SLIDER
     for (let i = 0; i < slidesContainer.current.childNodes.length; i++) {
       slidesContainer.current.childNodes[i].classList.remove("current");
       slidesContainer.current.childNodes[i].style.display = "none";
@@ -133,20 +133,20 @@ const SliderDesktop = (props) => {
     setCurrentId(+event.target.id);
   };
 
-  const autoMoveSliderDesktop = () => {
+  const autoMoveSliderDesktop = () => { // FUNCTION RESPONSIBLE FOR CHANGEING SLIDES AUTOMATICALLY 
     sliderDesktop.current.style.pointerEvents = "none";
     setInterval(() => {
       toggleRightImgHandler();
-    }, 20000);
+    }, 20000); 
   };
 
-  let slidesMain = props.slidesArray.map((slide) => (
+  let slidesMain = props.slidesArray.map((slide) => ( // CREATE SLIDES ELEMENTS
     <div key={slide.id} className="slidesContainer__slide" style={{ backgroundImage: `url(${slide.url})` }}>
       <div className="slide__text slide__text--left">{slide.textLeft}</div>
       <div className="slide__text slide__text--right">{slide.textRight}</div>
     </div>
   ));
-  let slidesSmall;
+  let slidesSmall; // VARIABLE WHICH STORE SMALL SLIDES ELEMENTS
   if (props.slidesArray.length > 3) {
     slidesSmall = (
       <Fragment>
