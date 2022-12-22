@@ -4,7 +4,6 @@ import "./SliderMobile.scss";
 const SliderMobile = (props) => {
   const sliderMobile = useRef();
   const slidesContainer = useRef();
-  const smallSlidesContainer = useRef();
   const containerSmallButtonLeft = useRef();
   const containerSmallButtonRight = useRef();
   const [startingPoint, setStartingPoint] = useState();
@@ -401,10 +400,10 @@ const SliderMobile = (props) => {
       <div ref={slidesContainer} onTouchStart={touchStartHandler} onTouchMove={touchMoveHandler} onTouchEnd={touchEndHandler} className="sliderMobile__slidesContainer">
         {slidesMain}
       </div>
-      <div ref={smallSlidesContainer} className="sliderMobile__smallSlidesContainer">
+      <div className="sliderMobile__smallSlidesContainer">
         <i ref={containerSmallButtonLeft} className="bi bi-caret-left-fill smallSlidesContainer__arrow smallSlidesContainer__arrow--left" onClick={toggleLeftImgHandler}></i>
         <i ref={containerSmallButtonRight} className="bi bi-caret-right-fill smallSlidesContainer__arrow smallSlidesContainer__arrow--right" onClick={toggleRightImgHandler}></i>
-        <div ref={smallSlidesContainer} className="smallSlidesContainer__slidesContainer">
+        <div className="smallSlidesContainer__slidesContainer">
           {slidesSmall}
         </div>
       </div>
