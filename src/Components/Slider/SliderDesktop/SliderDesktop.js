@@ -4,7 +4,6 @@ import { useRef, useEffect, useState, Fragment } from "react";
 const SliderDesktop = (props) => {
   const sliderDesktop = useRef();
   const slidesContainer = useRef();
-  const smallSlidesContainer = useRef();
   const containerButtonLeft = useRef();
   const containerButtonRight = useRef();
   const containerSmallButtonLeft = useRef();
@@ -244,7 +243,7 @@ const SliderDesktop = (props) => {
       <div className="sliderDesktop__smallSlidesContainer">
         <i ref={containerSmallButtonLeft} className="bi bi-caret-left-fill smallSlidesContainer__arrow smallSlidesContainer__arrow--left" onClick={toggleLeftImgHandler}></i>
         <i ref={containerSmallButtonRight} className="bi bi-caret-right-fill smallSlidesContainer__arrow smallSlidesContainer__arrow--right" onClick={toggleRightImgHandler}></i>
-        <div ref={smallSlidesContainer} className="smallSlidesContainer__slidesContainer">
+        <div className="smallSlidesContainer__slidesContainer">
           {slidesSmall}
         </div>
       </div>
