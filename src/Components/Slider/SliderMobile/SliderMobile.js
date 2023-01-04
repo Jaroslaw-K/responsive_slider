@@ -93,9 +93,9 @@ const SliderMobile = (props) => {
     // FUNCTION RESPONSIBLE FOR BEHAVIOUR OF SLIDER ELEMENTS WHEN USER MOVE FINGER ON SCREEN
     slidesContainer.current.style.pointerEvents = "none";
     setShift(startingPoint - event.touches[0].clientX);
-    if (shift > 0) {
-      // MOVE TO NEXT SLIDE
-      for (let i = 0; i < slidesContainer.current.childNodes.length; i++) {
+    for (let i = 0; i < slidesContainer.current.childNodes.length; i++) {
+      if (shift > 0) {
+        // MOVE TO NEXT SLIDE
         if (slidesContainer.current.childNodes[i].classList.contains("current")) {
           slidesContainer.current.childNodes[i].style.display = "block";
           slidesContainer.current.childNodes[i].style.left = `-${shift}px`;
@@ -109,10 +109,8 @@ const SliderMobile = (props) => {
           }
         }
       }
-    }
-    if (shift < 0) {
-      // MOVE TO PREVIOUS SLIDE
-      for (let i = 0; i < slidesContainer.current.childNodes.length; i++) {
+      if (shift < 0) {
+        // MOVE TO PREVIOUS SLIDE
         if (slidesContainer.current.childNodes[i].classList.contains("current")) {
           if (slidesContainer.current.childNodes[i].classList.contains("current")) {
             slidesContainer.current.childNodes[i].style.display = "block";
@@ -132,32 +130,36 @@ const SliderMobile = (props) => {
   };
   const touchEndHandler = () => {
     // FUNCTION RESPONSIBLE FOR BEHAVIOUR OF SLIDER ELEMENTS WHEN USER REMOVE FINGER FROM SCREEN
-    if (shift > 0) {
-      // MOVE CURRENT SLIDE TO LEFT AND BE VISIBLE NEXT SLIDE
-      if (shift > slidesContainer.current.clientWidth / 4) {
-        // ENOUGH TO MOVE TO NEXT SLIDE
-        for (let i = 0; i < slidesContainer.current.childNodes.length; i++) {
-          if (slidesContainer.current.childNodes[i].classList.contains("current")) {
-            let currentPosition = parseFloat(slidesContainer.current.childNodes[i].style.left);
-            let nextPosition;
-            if (slidesContainer.current.childNodes[i + 1] !== undefined) {
-              nextPosition = parseFloat(slidesContainer.current.childNodes[i + 1].style.left);
-            } else {
-              nextPosition = parseFloat(slidesContainer.current.childNodes[0].style.left);
-            }
-            let counter = 0;
-            let moveNextSlide = setInterval(() => {
+    for (let i = 0; i < slidesContainer.current.childNodes.length; i++) {
+      if (shift > 0) {
+        // MOVE CURRENT SLIDE TO LEFT AND BE VISIBLE NEXT SLIDE
+        if (slidesContainer.current.childNodes[i].classList.contains("current")) {
+          let currentPosition = parseFloat(slidesContainer.current.childNodes[i].style.left);
+          let nextPosition;
+          if (slidesContainer.current.childNodes[i + 1] !== undefined) {
+            nextPosition = parseFloat(slidesContainer.current.childNodes[i + 1].style.left);
+          } else {
+            nextPosition = parseFloat(slidesContainer.current.childNodes[0].style.left);
+          }
+          let counter = 0;
+          let moveSlide = setInterval(() => {
+            if (shift > slidesContainer.current.clientWidth / 4) {
               counter -= 3;
-              let positionCurrent = currentPosition + counter;
-              let positionNext = nextPosition + counter;
-              slidesContainer.current.childNodes[i].style.left = `${positionCurrent}px`;
-              if (slidesContainer.current.childNodes[i + 1] !== undefined) {
-                slidesContainer.current.childNodes[i + 1].style.left = `${positionNext}px`;
-              } else {
-                slidesContainer.current.childNodes[0].style.left = `${positionNext}px`;
-              }
+            } else {
+              counter += 3;
+            }
+            let positionCurrent = currentPosition + counter;
+            let positionNext = nextPosition + counter;
+            slidesContainer.current.childNodes[i].style.left = `${positionCurrent}px`;
+            if (slidesContainer.current.childNodes[i + 1] !== undefined) {
+              slidesContainer.current.childNodes[i + 1].style.left = `${positionNext}px`;
+            } else {
+              slidesContainer.current.childNodes[0].style.left = `${positionNext}px`;
+            }
+            if (shift > slidesContainer.current.clientWidth / 4) {
+              // ENOUGH TO MOVE TO NEXT SLIDE
               if (positionCurrent <= -slidesContainer.current.clientWidth) {
-                clearInterval(moveNextSlide);
+                clearInterval(moveSlide);
                 for (let j = 0; j < slidesContainer.current.childNodes.length; j++) {
                   slidesContainer.current.childNodes[j].style.left = "";
                   slidesContainer.current.childNodes[j].style.right = "";
@@ -176,34 +178,10 @@ const SliderMobile = (props) => {
                 setShift(0);
                 slidesContainer.current.style.pointerEvents = "auto";
               }
-            }, 1);
-          }
-        }
-      } else {
-        // NOT ENOUGH TO MOVE TO NEXT SLIDE
-        for (let i = 0; i < slidesContainer.current.childNodes.length; i++) {
-          if (slidesContainer.current.childNodes[i].classList.contains("current")) {
-            let currentPosition = parseFloat(slidesContainer.current.childNodes[i].style.left);
-            let nextPosition;
-            if (slidesContainer.current.childNodes[i + 1] !== undefined) {
-              nextPosition = parseFloat(slidesContainer.current.childNodes[i + 1].style.left);
             } else {
-              nextPosition = parseFloat(slidesContainer.current.childNodes[0].style.left);
-            }
-            let counter = 0;
-            let moveBackSlide = setInterval(() => {
-              counter += 3;
-              let positionCurrent = currentPosition + counter;
-              let positionNext = nextPosition + counter;
-              slidesContainer.current.childNodes[i].style.left = `${positionCurrent}px`;
-              if (slidesContainer.current.childNodes[i + 1] !== undefined) {
-                slidesContainer.current.childNodes[i + 1].style.left = `${positionNext}px`;
-              } else {
-                slidesContainer.current.childNodes[0].style.left = `${positionNext}px`;
-              }
-
+              // NOT ENOUGH TO MOVE TO NEXT SLIDE
               if (positionCurrent >= 0) {
-                clearInterval(moveBackSlide);
+                clearInterval(moveSlide);
                 for (let j = 0; j < slidesContainer.current.childNodes.length; j++) {
                   slidesContainer.current.childNodes[j].style.left = "";
                   slidesContainer.current.childNodes[j].style.right = "";
@@ -213,37 +191,39 @@ const SliderMobile = (props) => {
                 setShift(0);
                 slidesContainer.current.style.pointerEvents = "auto";
               }
-            }, 1);
-          }
+            }
+          }, 1);
         }
       }
-    }
-    if (shift < 0) {
-      // MOVE CURRENT SLIDE TO RIGHT AND BE VISIBLE PREVIOUS SLIDE
-      if (shift < -Math.abs(slidesContainer.current.clientWidth / 4)) {
-        // ENOUGH TO MOVE TO PREVIOUS SLIDE
-        for (let i = 0; i < slidesContainer.current.childNodes.length; i++) {
-          if (slidesContainer.current.childNodes[i].classList.contains("current")) {
-            let currentPosition = parseFloat(slidesContainer.current.childNodes[i].style.right);
-            let previousPosition;
-            if (slidesContainer.current.childNodes[i - 1] !== undefined) {
-              previousPosition = parseFloat(slidesContainer.current.childNodes[i - 1].style.right);
-            } else {
-              previousPosition = parseFloat(slidesContainer.current.childNodes[slidesContainer.current.childNodes.length - 1].style.right);
-            }
-            let counter = 0;
-            let moveNextSlide = setInterval(() => {
+      if (shift < 0) {
+        // MOVE CURRENT SLIDE TO RIGHT AND BE VISIBLE PREVIOUS SLIDE
+        if (slidesContainer.current.childNodes[i].classList.contains("current")) {
+          let currentPosition = parseFloat(slidesContainer.current.childNodes[i].style.right);
+          let previousPosition;
+          if (slidesContainer.current.childNodes[i - 1] !== undefined) {
+            previousPosition = parseFloat(slidesContainer.current.childNodes[i - 1].style.right);
+          } else {
+            previousPosition = parseFloat(slidesContainer.current.childNodes[slidesContainer.current.childNodes.length - 1].style.right);
+          }
+          let counter = 0;
+          let moveSlide = setInterval(() => {
+            if (shift < -Math.abs(slidesContainer.current.clientWidth / 4)) {
               counter -= 3;
-              let positionCurrent = currentPosition + counter;
-              let positionPrevious = previousPosition + counter;
-              slidesContainer.current.childNodes[i].style.right = `${positionCurrent}px`;
-              if (slidesContainer.current.childNodes[i - 1] !== undefined) {
-                slidesContainer.current.childNodes[i - 1].style.right = `${positionPrevious}px`;
-              } else {
-                slidesContainer.current.childNodes[slidesContainer.current.childNodes.length - 1].style.right = `${positionPrevious}px`;
-              }
+            } else {
+              counter += 3;
+            }
+            let positionCurrent = currentPosition + counter;
+            let positionPrevious = previousPosition + counter;
+            slidesContainer.current.childNodes[i].style.right = `${positionCurrent}px`;
+            if (slidesContainer.current.childNodes[i - 1] !== undefined) {
+              slidesContainer.current.childNodes[i - 1].style.right = `${positionPrevious}px`;
+            } else {
+              slidesContainer.current.childNodes[slidesContainer.current.childNodes.length - 1].style.right = `${positionPrevious}px`;
+            }
+            if (shift < -Math.abs(slidesContainer.current.clientWidth / 4)) {
+              // ENOUGH TO MOVE TO PREVIOUS SLIDE
               if (Math.abs(positionCurrent) >= slidesContainer.current.clientWidth) {
-                clearInterval(moveNextSlide);
+                clearInterval(moveSlide);
                 for (let j = 0; j < slidesContainer.current.childNodes.length; j++) {
                   slidesContainer.current.childNodes[j].style.left = "";
                   slidesContainer.current.childNodes[j].style.right = "";
@@ -262,33 +242,10 @@ const SliderMobile = (props) => {
                 setShift(0);
                 slidesContainer.current.style.pointerEvents = "auto";
               }
-            }, 1);
-          }
-        }
-      } else {
-        // NOT ENOUGH TO MOVE TO PREVIOUS SLIDE
-        for (let i = 0; i < slidesContainer.current.childNodes.length; i++) {
-          if (slidesContainer.current.childNodes[i].classList.contains("current")) {
-            let currentPosition = parseFloat(slidesContainer.current.childNodes[i].style.right);
-            let previousPosition;
-            if (slidesContainer.current.childNodes[i - 1] !== undefined) {
-              previousPosition = parseFloat(slidesContainer.current.childNodes[i - 1].style.right);
             } else {
-              previousPosition = parseFloat(slidesContainer.current.childNodes[slidesContainer.current.childNodes.length - 1].style.right);
-            }
-            let counter = 0;
-            let moveBackSlide = setInterval(() => {
-              counter += 3;
-              let positionCurrent = currentPosition + counter;
-              let positionPrevious = previousPosition + counter;
-              slidesContainer.current.childNodes[i].style.right = `${positionCurrent}px`;
-              if (slidesContainer.current.childNodes[i - 1] !== undefined) {
-                slidesContainer.current.childNodes[i - 1].style.right = `${positionPrevious}px`;
-              } else {
-                slidesContainer.current.childNodes[slidesContainer.current.childNodes.length - 1].style.right = `${positionPrevious}px`;
-              }
+              // NOT ENOUGH TO MOVE TO PREVIOUS SLIDE
               if (positionCurrent >= 0) {
-                clearInterval(moveBackSlide);
+                clearInterval(moveSlide);
                 for (let j = 0; j < slidesContainer.current.childNodes.length; j++) {
                   slidesContainer.current.childNodes[j].style.left = "";
                   slidesContainer.current.childNodes[j].style.right = "";
@@ -298,8 +255,8 @@ const SliderMobile = (props) => {
                 setShift(0);
                 slidesContainer.current.style.pointerEvents = "auto";
               }
-            }, 1);
-          }
+            }
+          }, 1);
         }
       }
     }
@@ -314,7 +271,6 @@ const SliderMobile = (props) => {
         slidesContainer.current.childNodes[i].style.left = "";
         slidesContainer.current.childNodes[i].style.right = "";
       }
-
       slidesContainer.current.childNodes[currentId].style.display = "block";
       slidesContainer.current.childNodes[currentId].style.left = "0";
       slidesContainer.current.childNodes[currentId].classList.add("current");
